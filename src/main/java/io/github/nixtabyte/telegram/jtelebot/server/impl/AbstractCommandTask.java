@@ -13,7 +13,6 @@ import io.github.nixtabyte.telegram.jtelebot.server.CommandTask;
 
 import java.util.Observable;
 
-import org.apache.log4j.Logger;
 
 /**
  * Abstract component that extends {@link Observable} and implements
@@ -31,8 +30,7 @@ import org.apache.log4j.Logger;
 public abstract class AbstractCommandTask extends Observable implements
 		CommandTask, Runnable {
 
-	private static final Logger LOG = Logger
-			.getLogger(AbstractCommandTask.class);
+
 
 	protected Command command;
 	protected long delay;

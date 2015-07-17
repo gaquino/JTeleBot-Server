@@ -14,11 +14,10 @@ import io.github.nixtabyte.telegram.jtelebot.server.CommandQueue;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import org.apache.log4j.Logger;
+
 
 public class DefaultCommandQueue implements CommandQueue {
 
-	private static final Logger LOG = Logger.getLogger(DefaultCommandQueue.class);
 
 	private Queue<Command> commandQueue;
 

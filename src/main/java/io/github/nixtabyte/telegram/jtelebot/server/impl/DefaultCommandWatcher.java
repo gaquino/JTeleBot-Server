@@ -23,7 +23,8 @@ import io.github.nixtabyte.telegram.jtelebot.server.CommandWatcher;
 
 import java.util.concurrent.ConcurrentMap;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 
@@ -50,8 +51,8 @@ import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
  * */
 public class DefaultCommandWatcher extends AbstractCommandWatcher {
 
-	private static final Logger LOG = Logger
-			.getLogger(DefaultCommandWatcher.class);
+	private static final Logger LOG = LoggerFactory.getLogger(DefaultCommandWatcher.class);
+
 
 	private static final long MAX_CACHE_CAPACITY = 1000;
 
@@ -117,11 +118,9 @@ public class DefaultCommandWatcher extends AbstractCommandWatcher {
 						+ response.getDescription());
 			}
 		} catch (JsonParsingException e) {
-			LOG.error("JSON parsing failed");
-			LOG.error(e);
+			LOG.error("JSON parsing failed",e);
 		} catch (TelegramServerException e) {
-			LOG.error("Fail at retrieving response from telegram");
-			LOG.error(e);
+			LOG.error("Fail at retrieving response from telegram",e);
 
 		}
 
@@ -152,7 +151,7 @@ public class DefaultCommandWatcher extends AbstractCommandWatcher {
 					commandDispatcher.enqueueCommand(command);
 				} catch (Exception e) {
 					// gotta catch 'em all
-					LOG.error(e);
+					LOG.error("UNEXPECTEC EXCEPTION",e);
 				}
 				// Update offset in order to fetch a new slot the next time
 				offset = update.getUpdateId().longValue() + 1L;

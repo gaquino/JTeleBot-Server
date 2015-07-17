@@ -12,7 +12,8 @@ import io.github.nixtabyte.telegram.jtelebot.server.Command;
 import io.github.nixtabyte.telegram.jtelebot.server.CommandWatcher;
 import io.github.nixtabyte.telegram.jtelebot.server.Service;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Abstract polling implementation of {@link CommandWatcher}, {@link Service}
@@ -29,8 +30,8 @@ import org.apache.log4j.Logger;
 public abstract class AbstractCommandWatcher implements CommandWatcher,
 		Service, Runnable {
 
-	private static final Logger LOG = Logger
-			.getLogger(AbstractCommandWatcher.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AbstractCommandWatcher.class);
+
 
 	protected boolean alive;
 	protected long delay;
@@ -76,7 +77,7 @@ public abstract class AbstractCommandWatcher implements CommandWatcher,
 			try {
 				Thread.sleep(delay);
 			} catch (InterruptedException e) {
-				LOG.error(e);
+				LOG.error("Thread was interrupted",e);
 			}
 			retrieveCommands();
 		}

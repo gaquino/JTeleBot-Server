@@ -16,7 +16,8 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.concurrent.ConcurrentMap;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 
@@ -41,8 +42,8 @@ public class DefaultCommandDispatcher extends AbstractCommandDispatcher {
 
 	private ConcurrentMap<String, DefaultCommandTask> taskList;
 
-	private static final Logger LOG = Logger
-			.getLogger(DefaultCommandDispatcher.class);
+	private static final Logger LOG = LoggerFactory.getLogger(DefaultCommandDispatcher.class);
+
 
 	public DefaultCommandDispatcher() {
 		this(5, 1000, new DefaultCommandQueue());

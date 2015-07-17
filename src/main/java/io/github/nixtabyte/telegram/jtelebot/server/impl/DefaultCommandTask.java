@@ -10,12 +10,13 @@ package io.github.nixtabyte.telegram.jtelebot.server.impl;
 
 import io.github.nixtabyte.telegram.jtelebot.server.Command;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DefaultCommandTask extends AbstractCommandTask {
 
-	private static final Logger LOG = Logger
-			.getLogger(DefaultCommandTask.class);
+	private static final Logger LOG = LoggerFactory.getLogger(DefaultCommandTask.class);
+
 
 	public DefaultCommandTask(final Command command) {
 		super(command);
@@ -33,7 +34,7 @@ public class DefaultCommandTask extends AbstractCommandTask {
 			command.execute();
 			LOG.trace("\tEND processing command {" + command + "}");
 		} catch (InterruptedException e) {
-			LOG.error(e);
+			LOG.error("Process command thread was interrupted",e);
 		}
 	}
 

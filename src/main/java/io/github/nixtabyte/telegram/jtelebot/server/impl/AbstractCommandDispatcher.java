@@ -18,7 +18,8 @@ import java.util.Observer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Abstract implementation of {@link CommandDispatcher}, {@link Observer},
@@ -41,8 +42,8 @@ import org.apache.log4j.Logger;
 public abstract class AbstractCommandDispatcher implements CommandDispatcher,
 		Observer, Service, Runnable {
 
-	private static final Logger LOG = Logger
-			.getLogger(AbstractCommandDispatcher.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AbstractCommandDispatcher.class);
+
 
 	protected ExecutorService executor;
 	protected CommandQueue commandQueue;
@@ -98,13 +99,13 @@ public abstract class AbstractCommandDispatcher implements CommandDispatcher,
 			try {
 				Thread.sleep(delay);
 			} catch (InterruptedException e) {
-				LOG.error(e);
+				LOG.error("Thread was interrupted",e);
 			}
 			try{
 				dispatchCommands();
 			}
 			catch(Exception e){
-				LOG.error(e);
+				LOG.error("Unexpected error",e);
 			}
 		}
 
