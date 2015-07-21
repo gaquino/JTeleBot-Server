@@ -21,6 +21,8 @@ import io.github.nixtabyte.telegram.jtelebot.server.CommandDispatcher;
 import io.github.nixtabyte.telegram.jtelebot.server.CommandFactory;
 import io.github.nixtabyte.telegram.jtelebot.server.CommandWatcher;
 
+import java.util.Iterator;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -89,7 +91,7 @@ public class DefaultCommandWatcher extends AbstractCommandWatcher {
 	}
 
 	@Override
-	public void retrieveCommands() {
+	public synchronized void retrieveCommands() {
 		LOG.debug("\tPolling Telegram updates (offset:" + offset + ", limit:"
 				+ limit + ", timeout=" + timeout + ")...");
 		TelegramResponse<?> response;
@@ -104,6 +106,11 @@ public class DefaultCommandWatcher extends AbstractCommandWatcher {
 				LOG.error("Telegram response was unsuccessful: ["
 						+ response.getErrorCode() + "] "
 						+ response.getDescription());
+			}
+			final Iterator<Entry<String, Message>> i = cache.entrySet().iterator();
+			while(i.hasNext()){
+				LOG.info("Removing from cache update "+i.next().getKey());
+				i.remove();
 			}
 		} catch (JsonParsingException e) {
 			LOG.error("JSON parsing failed",e);
