@@ -21,12 +21,12 @@ import io.github.nixtabyte.telegram.jtelebot.server.CommandDispatcher;
 import io.github.nixtabyte.telegram.jtelebot.server.CommandFactory;
 import io.github.nixtabyte.telegram.jtelebot.server.CommandWatcher;
 
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 
 /**
  * Main implementation of {@link CommandWatcher} that extends the
@@ -54,7 +54,6 @@ public class DefaultCommandWatcher extends AbstractCommandWatcher {
 	private static final Logger LOG = LoggerFactory.getLogger(DefaultCommandWatcher.class);
 
 
-	private static final long MAX_CACHE_CAPACITY = 1000;
 
 	private CommandDispatcher commandDispatcher;
 
@@ -68,20 +67,11 @@ public class DefaultCommandWatcher extends AbstractCommandWatcher {
 
 	private ConcurrentMap<String, Message> cache;
 
-	public DefaultCommandWatcher() {
-		this(0, MAX_CACHE_CAPACITY, null, null, null);
-	}
 
-	public DefaultCommandWatcher(final String telegramToken,
-			CommandDispatcher commandDispatcher,
-			final CommandFactory commandFactory) {
-		this(0, MAX_CACHE_CAPACITY, telegramToken, commandDispatcher,
-				commandFactory);
-	}
 
 
 	public DefaultCommandWatcher(final long delayInMillis,
-			final long cacheCapacity, final String telegramToken,
+			final int cacheCapacity, final String telegramToken,
 			final CommandDispatcher commandDispatcher,
 			final CommandFactory commandFactory) {
 
@@ -95,9 +85,7 @@ public class DefaultCommandWatcher extends AbstractCommandWatcher {
 		this.offset = 0;
 		this.limit = 100;
 		this.timeout = 0;
-
-		cache = new ConcurrentLinkedHashMap.Builder<String, Message>()
-				.maximumWeightedCapacity(cacheCapacity).build();
+		cache = new ConcurrentHashMap<String, Message>(cacheCapacity);
 	}
 
 	@Override

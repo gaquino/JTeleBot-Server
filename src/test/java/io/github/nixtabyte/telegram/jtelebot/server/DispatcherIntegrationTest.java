@@ -24,7 +24,7 @@ public class DispatcherIntegrationTest {
 
 	@Before
 	public void setup() {
-		commandDispatcher = new DefaultCommandDispatcher(THREAD_POOL, CMD_EXEC_DELAY,
+		commandDispatcher = new DefaultCommandDispatcher(THREAD_POOL, 100, CMD_EXEC_DELAY,
 				new DefaultCommandQueue());
 	}
 

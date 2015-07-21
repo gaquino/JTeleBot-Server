@@ -22,8 +22,8 @@ public class WatcherIntegrationTest {
 	private static final String TEST_TOKEN = "";
 
 	// Polling Telegram Updates (Watcher)
-	private static final long POLLING_DELAY = 10000;
-	private static final int CACHE_CAPACITY = 1000;
+	private static final long POLLING_DELAY = 100;
+	private static final int CACHE_CAPACITY = 100;
 
 	private static final int DEFAULT_INITIAL_OFFSET = 0;
 	private static final int DEFAULT_UPDATES_LIMIT = 100;
@@ -42,7 +42,7 @@ public class WatcherIntegrationTest {
 	public void setUp() {
 		// Init first the Dispatcher...
 		DefaultCommandQueue defaultCommandQueue = new DefaultCommandQueue();
-		commandDispatcher = new DefaultCommandDispatcher(THREAD_POOL_SIZE,
+		commandDispatcher = new DefaultCommandDispatcher(THREAD_POOL_SIZE,100,
 				CMD_EXEC_DELAY, defaultCommandQueue);
 		commandDispatcher.startUp();
 

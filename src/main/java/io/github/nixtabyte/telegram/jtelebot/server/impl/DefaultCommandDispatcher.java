@@ -14,12 +14,12 @@ import io.github.nixtabyte.telegram.jtelebot.server.CommandQueue;
 
 import java.util.Observable;
 import java.util.Observer;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 
 /**
  * Main implementation of {@link CommandDispatcher} that extends the
@@ -45,26 +45,13 @@ public class DefaultCommandDispatcher extends AbstractCommandDispatcher {
 	private static final Logger LOG = LoggerFactory.getLogger(DefaultCommandDispatcher.class);
 
 
-	public DefaultCommandDispatcher() {
-		this(5, 1000, new DefaultCommandQueue());
-	}
-
-	public DefaultCommandDispatcher(final CommandQueue commandQueue) {
-		this(5, 1000, 1000, commandQueue);
-	}
-
-	public DefaultCommandDispatcher(final int threadPoolSize, final long delay,
-			final CommandQueue commandQueue) {
-		this(threadPoolSize, 1000, delay, commandQueue);
-	}
 
 	public DefaultCommandDispatcher(final int threadPoolSize,
-			final long taskListCapacity, final long delay,
+			final int taskListCapacity, final long delay,
 			final CommandQueue commandQueue) {
-
 		super(threadPoolSize, delay, commandQueue);
-		taskList = new ConcurrentLinkedHashMap.Builder<String, DefaultCommandTask>()
-				.maximumWeightedCapacity(taskListCapacity).build();
+		taskList = new ConcurrentHashMap<String,DefaultCommandTask>(taskListCapacity);
+
 	}
 
 	@Override
