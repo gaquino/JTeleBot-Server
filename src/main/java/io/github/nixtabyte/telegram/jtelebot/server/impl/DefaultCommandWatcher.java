@@ -13,7 +13,6 @@ import io.github.nixtabyte.telegram.jtelebot.client.impl.DefaultRequestHandler;
 import io.github.nixtabyte.telegram.jtelebot.exception.JsonParsingException;
 import io.github.nixtabyte.telegram.jtelebot.exception.TelegramServerException;
 import io.github.nixtabyte.telegram.jtelebot.request.factory.TelegramRequestFactory;
-import io.github.nixtabyte.telegram.jtelebot.response.json.Message;
 import io.github.nixtabyte.telegram.jtelebot.response.json.TelegramResponse;
 import io.github.nixtabyte.telegram.jtelebot.response.json.Update;
 import io.github.nixtabyte.telegram.jtelebot.server.Command;
@@ -21,10 +20,7 @@ import io.github.nixtabyte.telegram.jtelebot.server.CommandDispatcher;
 import io.github.nixtabyte.telegram.jtelebot.server.CommandFactory;
 import io.github.nixtabyte.telegram.jtelebot.server.CommandWatcher;
 
-import java.util.Iterator;
-import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,7 +63,6 @@ public class DefaultCommandWatcher extends AbstractCommandWatcher {
 	private long limit;
 	private long timeout;
 
-	private ConcurrentMap<String, Message> cache;
 
 
 
@@ -87,7 +82,6 @@ public class DefaultCommandWatcher extends AbstractCommandWatcher {
 		this.offset = 0;
 		this.limit = 100;
 		this.timeout = 0;
-		cache = new ConcurrentHashMap<String, Message>(cacheCapacity);
 	}
 
 	@Override
@@ -106,11 +100,6 @@ public class DefaultCommandWatcher extends AbstractCommandWatcher {
 				LOG.error("Telegram response was unsuccessful: ["
 						+ response.getErrorCode() + "] "
 						+ response.getDescription());
-			}
-			final Iterator<Entry<String, Message>> i = cache.entrySet().iterator();
-			while(i.hasNext()){
-				LOG.info("Removing from cache update "+i.next().getKey());
-				i.remove();
 			}
 		} catch (JsonParsingException e) {
 			LOG.error("JSON parsing failed",e);
@@ -135,8 +124,7 @@ public class DefaultCommandWatcher extends AbstractCommandWatcher {
 			// Assert that UpdateId has not been dispatched before by reviewing
 			// in cache..
 			// LOG.debug(cache.keySet());
-			if (!cache.containsKey(update.getUpdateId().toString())) {
-				cache.put(update.getUpdateId().toString(), update.getMessage());
+			if (true) {
 				newUpdatesCounter++;
 				// Instantiate a new Command, attach the Message object, enqueue
 				// Command via the Dispatcher
@@ -156,14 +144,14 @@ public class DefaultCommandWatcher extends AbstractCommandWatcher {
 		if (LOG.isInfoEnabled() && response.getResult().size() > 0) {
 			LOG.info("\tFound " + response.getResult().size() + " updates, "
 					+ newUpdatesCounter
-					+ " new updates added - History cache size: "
-					+ cache.size());
+					+ " new updates added - Last update: "
+					+ offset);
 
 		} else {
 			LOG.trace("\tFound " + response.getResult().size() + " updates, "
 					+ newUpdatesCounter
-					+ " new updates added - History cache size: "
-					+ cache.size());
+					+ " new updates added - Last update: "
+					+ offset);
 		}
 	}
 
