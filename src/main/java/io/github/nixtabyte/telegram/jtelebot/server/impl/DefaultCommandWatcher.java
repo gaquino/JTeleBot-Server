@@ -121,24 +121,19 @@ public class DefaultCommandWatcher extends AbstractCommandWatcher {
 					+ update.getMessage().getFromUser().getId() + ":"
 					+ update.getMessage().getFromUser().getUsername());
 
-			// Assert that UpdateId has not been dispatched before by reviewing
-			// in cache..
-			// LOG.debug(cache.keySet());
-			if (true) {
 				newUpdatesCounter++;
 				// Instantiate a new Command, attach the Message object, enqueue
 				// Command via the Dispatcher
-				try {
-					final Command command = commandFactory.createCommand(
-							update.getMessage(), requestHandler);
-					commandDispatcher.enqueueCommand(command);
-				} catch (Exception e) {
+			try {
+				final Command command = commandFactory.createCommand(update.getMessage(), requestHandler);
+				commandDispatcher.enqueueCommand(command);
+			} catch (Exception e) {
 					// gotta catch 'em all
-					LOG.error("UNEXPECTEC EXCEPTION",e);
-				}
-				// Update offset in order to fetch a new slot the next time
-				offset = update.getUpdateId().longValue() + 1L;
+				LOG.error("UNEXPECTEC EXCEPTION",e);
 			}
+				// Update offset in order to fetch a new slot the next time
+			offset = update.getUpdateId().longValue() + 1L;
+
 		}
 
 		if (LOG.isInfoEnabled() && response.getResult().size() > 0) {
